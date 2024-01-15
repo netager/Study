@@ -12,7 +12,6 @@ public class CounselDTO implements Serializable {
     @AllArgsConstructor
     @Builder
     @Getter
-    @Setter
     public static class Request {
 
         private String name;
@@ -28,12 +27,6 @@ public class CounselDTO implements Serializable {
         private String addressDetail;
 
         private String zipCode;
-
-        private LocalDateTime appliedAt;
-
-        private LocalDateTime createdAt;
-
-        private LocalDateTime updatedAt;
 
     }
 

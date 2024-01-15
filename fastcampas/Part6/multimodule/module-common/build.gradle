@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.1.7'
     id 'io.spring.dependency-management' version '1.1.4'
+    id 'java-library'
 }
 
 group = 'dev.be'
@@ -26,8 +27,32 @@ dependencies {
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+//    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    runtimeOnly 'com.h2database:h2'
+
+    api 'org.springframework.boot:spring-boot-starter-data-jpa'
+//    implementation 'mysql:mysql-connector-jpa'
+//    runtimeOnly 'com.h2database:h2'
+//    runtimeOnly 'org.postgresql:postgresql'
 }
 
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+tasks.bootJar { enabled= false }
+tasks.jar { enabled = true }
+
+// jar build
+// ---------
+// ./gradlew clean :module-api:buildNeeded --stacktrace --info --refresh-dependencies -x test
+
+// option
+// ------
+// -- stacktrace :
+// --info : ~~~ log type : debug -> info -> warn -> error
+// -- refresh-dependencies : 마지막으로 dependencies 확인
+// -x test : 로컬 환경에서 테스트코드 SKIP 하면서 빌드 수행 (테스트 코드 작성하고 그레들로 빌드할 때 테스트코드 실행. 테스트코드 오류나면 빌드 안됨)
+
+// java -jar -Dspring.profiles.active=local module-api-0.0.1-SNAPSHOT.jar
