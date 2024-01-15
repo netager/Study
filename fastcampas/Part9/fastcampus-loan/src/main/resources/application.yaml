@@ -1,0 +1,56 @@
+server:
+  port: 8080
+spring:
+  datasource:
+    driverClassName: org.h2.Driver
+    url: jdbc:h2:~/loan
+    username: sa
+    password:
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
+    database-platform: org.hibernate.dialect.H2Dialect
+  h2:
+    console:
+      path: /h2-console
+      enabled: true
+logging.level:
+  org.hibernate.SQL: debug
+
+
+## applicaation.properties Configuration
+## -------------------------------------
+# DATABASE - h2
+#spring.h2.console.enabled=true
+#spring.h2.console.path=/h2-console
+#spring.datasource.url=jdbc:h2:~/loan
+#spring.datasource.url=jdbc:h2:mem:~/testdb
+#spring.datasource.driverClassName=org.h2.Driver
+#spring.datasource.username=sa
+#spring.datasource.password=
+#spring.h2.console.settings.web-allow-others= true
+
+# DATABASE - postgresSQL DB Configuration
+# ---------------------------------------
+#spring.datasource.url=jdbc:postgresql://192.168.200.100:5432/sbb
+#spring.datasource.driverClassName=org.postgresql.Driver
+#spring.datasource.username=sbbadmin
+#spring.datasource.password=sbb1234
+
+
+# JPA
+# ---
+# jpa ??? ?? : hibernate
+# -----------------------
+#spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.H2Dialect
+##spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+#spring.jpa.hibernate.ddl-auto=update
+#spring.jpa.properties.hibernate.use_sql_comments=true
+#spring.jpa.properties.hibernate.format_sql=true
+#spring.jpa.properties.hibernate.show_sql=true
+#spring.jpa.generate-ddl=true
