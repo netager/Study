@@ -83,7 +83,44 @@ public class CounselServiceTest {
         when(counselRepository.findById(findId)).thenThrow(new BaseException(ResultType.SYSTEM_ERROR));
 
         Assertions.assertThrows(BaseException.class, () -> counselService.get(findId));
+    }
 
+    @Test
+    void Should_ReturnUpdatedResponseOfExistCounselEntity_When_RequestUpdateExistCounselInfo() {
+        long findId = 1L;
 
+        Counsel entity = Counsel.builder()
+                .counselId(1L)
+                .name("Member Kim")
+                .build();
+
+        Request request = Request.builder()
+                .name("Member Kang")
+                .build();
+
+        when(counselRepository.save(ArgumentMatchers.any(Counsel.class))).thenReturn(entity);
+        when(counselRepository.findById(findId)).thenReturn(Optional.ofNullable(entity));
+
+        Response actual = counselService.update(findId, request);
+
+        assertThat(actual.getCounselId()).isSameAs(findId);
+        assertThat(actual.getName()).isSameAs(request.getName());
+//        assertThat(actual.getName()).isSameAs("Member Lee");
+    }
+
+    @Test
+    void Should_ReturnDeletedCounselEntity_When_RequestDeleteExistCounselInfo() {
+        long findId = 1L;
+
+        Counsel entity = Counsel.builder()
+                .counselId(1L)
+                .build();
+
+        when(counselRepository.save(ArgumentMatchers.any(Counsel.class))).thenReturn(entity);
+        when(counselRepository.findById(findId)).thenReturn(Optional.ofNullable(entity));
+
+        counselService.delete(findId);
+
+        assertThat(entity.getIsDeleted()).isSameAs(true);
     }
 }
