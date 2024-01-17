@@ -4,10 +4,9 @@ import lombok.*;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.List;
 
-public class ApplicationDTO implements Serializable {
+public class AcceptTermsDTO1 implements Serializable {
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
@@ -32,36 +31,8 @@ public class ApplicationDTO implements Serializable {
     @Builder
     @Getter
     @Setter
-    public static class Response {
-
-        private Long applicationId;
-
-        private String name;
-
-        private String cellPhone;
-
-        private String email;
-
-        private BigDecimal hopeAmount;
-
-        private BigDecimal interestRate;
-
-        private LocalDateTime appliedAt;
-
-        private LocalDateTime createdAt;
-
-        private LocalDateTime updatedAt;
-
-    }
-
-    @NoArgsConstructor
-    @AllArgsConstructor
-    @Builder
-    @Getter
-    @Setter
     public static class AcceptTerms {
 
         List<Long> acceptTermsIds;
     }
-
 }
