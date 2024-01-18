@@ -38,8 +38,6 @@ public class ApplicationServiceImpl implements ApplicationService {
 
         Application applied = applicationRepository.save(application);
 
-        System.out.println("application.interestRate: " + application.getInterestRate());
-        System.out.println("applied.interestRate: " + applied.getInterestRate());
         return modelMapper.map(applied, Response.class);
     }
 
