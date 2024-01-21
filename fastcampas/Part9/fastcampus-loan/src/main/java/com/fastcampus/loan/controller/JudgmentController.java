@@ -45,6 +45,7 @@ public class JudgmentController extends AbstractController {
 
     @PatchMapping("/{judgmentId}/grants")
     public ResponseDTO<ApplicationDTO.GrantAmount> grant(@PathVariable Long judgmentId) {
+        System.out.println("[JudgmentController ] judgmentId : " + judgmentId);
         return ok(judgmentService.grant(judgmentId));
     }
 }

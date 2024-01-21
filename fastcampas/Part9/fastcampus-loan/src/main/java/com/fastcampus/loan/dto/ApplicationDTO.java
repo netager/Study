@@ -44,9 +44,13 @@ public class ApplicationDTO implements Serializable {
 
         private BigDecimal hopeAmount;
 
+        private BigDecimal approvalAmount;
+
         private BigDecimal interestRate;
 
         private LocalDateTime appliedAt;
+
+        private LocalDateTime contractedAt;
 
         private LocalDateTime createdAt;
 

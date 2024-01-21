@@ -26,6 +26,7 @@ import java.util.stream.Stream;
 @RestController
 @RequestMapping("/applications")
 public class ApplicationController extends AbstractController {
+
     private final ApplicationService applicationService;
     private final FileStorageService fileStorageService;
 
@@ -71,7 +72,7 @@ public class ApplicationController extends AbstractController {
 
     }
 
-    @GetMapping("{applicationId}/files/infos")
+    @GetMapping("/{applicationId}/files/infos")
     public ResponseDTO<List<FileDTO>> getFileInfos(@PathVariable Long applicationId) {
         List<FileDTO> fileInfos = fileStorageService.loadAll(applicationId).map(path -> {
             String fileName = path.getFileName().toString();
@@ -84,9 +85,14 @@ public class ApplicationController extends AbstractController {
 
     }
 
-    @DeleteMapping("{applicationId}/files")
+    @DeleteMapping("/{applicationId}/files")
     public ResponseDTO<Void> deleteAll(@PathVariable Long applicationId) {
         fileStorageService.deleteAll(applicationId);
         return ok();
+    }
+
+    @PutMapping("/{applicationId}/contract")
+    public ResponseDTO<Response> contract(@PathVariable Long applicationId) {
+        return ok(applicationService.contract(applicationId));
     }
 }

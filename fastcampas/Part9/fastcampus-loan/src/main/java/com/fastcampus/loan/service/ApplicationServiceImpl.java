@@ -9,6 +9,7 @@ import com.fastcampus.loan.exception.BaseException;
 import com.fastcampus.loan.exception.ResultType;
 import com.fastcampus.loan.repository.AcceptTermsRepository;
 import com.fastcampus.loan.repository.ApplicationRepository;
+import com.fastcampus.loan.repository.JudgmentRepository;
 import com.fastcampus.loan.repository.TermsRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -16,6 +17,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -26,6 +28,7 @@ import java.util.stream.Collectors;
 public class ApplicationServiceImpl implements ApplicationService {
 
     private final ApplicationRepository applicationRepository;
+    private final JudgmentRepository judgmentRepository;
     private final TermsRepository termsRepository;
     private final AcceptTermsRepository acceptTermsRepository;
     private final ModelMapper modelMapper;
@@ -110,5 +113,30 @@ public class ApplicationServiceImpl implements ApplicationService {
         }
 
         return true;
+    }
+
+    @Override
+    public Response contract(Long applicationId) {
+        // 신청 정보 있는지
+        Application application = applicationRepository.findById(applicationId).orElseThrow(() -> {
+            throw new BaseException(ResultType.SYSTEM_ERROR);
+        });
+
+        // 심사 정보 있는지
+        judgmentRepository.findByApplicationId(applicationId).orElseThrow(() -> {
+           throw new BaseException(ResultType.SYSTEM_ERROR);
+        });
+
+        // 승인된 금액이 > 0
+        if (application.getApprovalAmount() == null
+                || application.getApprovalAmount().compareTo(BigDecimal.ZERO) == 0) {
+            throw new BaseException(ResultType.SYSTEM_ERROR);
+        }
+
+        // 계약 체결
+        application.setContractedAt(LocalDateTime.now());
+        applicationRepository.save(application);
+
+        return null;
     }
 }
