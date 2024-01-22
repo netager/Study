@@ -14,4 +14,6 @@ public interface RepaymentService {
     List<Response> get(Long applicationId);
 
     UpdateResponse update(Long repaymentId, Request request);
+
+    void delete(Long repaymentId);
 }

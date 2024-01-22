@@ -18,6 +18,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -84,7 +85,54 @@ public class RepaymentServiceImpl implements RepaymentService {
         Long applicationId = repayment.getApplicationId();
         BigDecimal beforeRepaymentAmount = repayment.getRepaymentAmount();
 
-        return null;
+        balanceService.repaymentUpdate(applicationId,
+                BalanceDTO.RepaymentRequest.builder()
+                        .type(BalanceDTO.RepaymentRequest.RepaymentType.ADD)
+                        .repaymentAmount(beforeRepaymentAmount)
+                        .build());
+
+
+        BalanceDTO.Response updatedBalance = balanceService.repaymentUpdate(applicationId,
+                BalanceDTO.RepaymentRequest.builder()
+                    .repaymentAmount(request.getRepaymentAmount())
+                    .type(BalanceDTO.RepaymentRequest.RepaymentType.REMOVE)
+                    .build()
+        );
+
+        repayment.setRepaymentAmount(request.getRepaymentAmount());
+        repayment.setBalance(updatedBalance.getBalance());
+        repaymentRepository.save(repayment);
+
+        return UpdateResponse.builder()
+                .applicationId(applicationId)
+                .beforeRepaymentAmount(beforeRepaymentAmount)
+                .afterRepaymentAmount(request.getRepaymentAmount())
+                .balance(updatedBalance.getBalance())
+                .createdAt(repayment.getCreatedAt())
+                .updatedAt(repayment.getUpdatedAt())
+                .build();
+
+    }
+
+    @Override
+    public void delete(Long repaymentId) {
+        Repayment repayment = repaymentRepository.findById(repaymentId).orElseThrow(() -> {
+            throw new BaseException(ResultType.SYSTEM_ERROR);
+        });
+
+        Long applicationId = repayment.getApplicationId();
+        BigDecimal removeRepaymentAmount = repayment.getRepaymentAmount();
+
+        balanceService.repaymentUpdate(applicationId,
+                BalanceDTO.RepaymentRequest.builder()
+                        .repaymentAmount(removeRepaymentAmount)
+                        .type(BalanceDTO.RepaymentRequest.RepaymentType.ADD)
+                        .build());
+
+        repayment.setIsDeleted(true);
+
+        repaymentRepository.save(repayment);
+
     }
 
     private boolean isRepayableApplication(Long applicationId) {

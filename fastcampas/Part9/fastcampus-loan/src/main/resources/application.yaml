@@ -1,3 +1,30 @@
+#server:
+#  port: 8080
+#spring:
+#  datasource:
+#    driverClassName: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://host.docker.internal:3306/loan?characterEncoding=UTF-8&serverTimezone=Asia/Seoul
+#    username: root
+#    password: test
+#  jpa:
+#    hibernate:
+#      ddl-auto: create #update #create
+#    properties:
+#      hibernate:
+#        format_sql: true
+#      naming:
+#        physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
+#    database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+#    database: mysql
+#  servlet:
+#    multipart:
+#      max-file-size: 10MB
+#      max-request-size: 10MB
+#      location: # file upload path    # c:/Users/User/Study/filetest
+#logging.level:
+#  org.hibernate.SQL: debug
+
+############ h2 db 환경
 server:
   port: 8080
 spring:
@@ -26,7 +53,6 @@ spring:
       location: c:/Users/User/Study/filetest
 logging.level:
   org.hibernate.SQL: debug
-
 
 ## applicaation.properties Configuration
 ## -------------------------------------
