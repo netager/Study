@@ -3,6 +3,7 @@ package com.fastcampus.loan.service;
 import com.fastcampus.loan.domain.Application;
 import com.fastcampus.loan.domain.Entry;
 import com.fastcampus.loan.dto.BalanceDTO;
+import com.fastcampus.loan.dto.EntryDTO.UpdateResponse;
 import com.fastcampus.loan.dto.EntryDTO.Request;
 import com.fastcampus.loan.dto.EntryDTO.Response;
 import com.fastcampus.loan.exception.BaseException;
@@ -10,9 +11,11 @@ import com.fastcampus.loan.exception.ResultType;
 import com.fastcampus.loan.repository.ApplicationRepository;
 import com.fastcampus.loan.repository.EntryRepository;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.sql.Update;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 @Service
@@ -58,6 +61,56 @@ public class EntryServiceImpl implements EntryService {
         } else {
             return null;
         }
+    }
+
+    @Override
+    public UpdateResponse update(Long entryId, Request request) {
+        // Entry 존재 유무
+        Entry entry = entryRepository.findById(entryId).orElseThrow(() -> {
+            throw new BaseException(ResultType.SYSTEM_ERROR);
+        });
+
+        // before -> after
+        BigDecimal beforeEntryAmount = entry.getEntryAmount();
+        entry.setEntryAmount(request.getEntryAmount());
+
+        entryRepository.save(entry);
+
+        // balance update
+        Long applicationId = entry.getApplicationId();
+        balanceService.update(applicationId,
+                BalanceDTO.UpdateRequest.builder()
+                        .beforeEntryAmount(beforeEntryAmount)
+                        .afterEntryAmount(request.getEntryAmount())
+                        .build());
+
+
+        return UpdateResponse.builder()
+                .entryId(entryId)
+                .applicationId(applicationId)
+                .beforeEntryAmount(beforeEntryAmount)
+                .afterEntryAmount(request.getEntryAmount())
+                .build();
+    }
+
+    @Override
+    public void delete(Long entryId) {
+        Entry entry = entryRepository.findById(entryId).orElseThrow(() -> {
+            throw new BaseException(ResultType.SYSTEM_ERROR);
+        });
+
+        entry.setIsDeleted(true);
+        entryRepository.save(entry);
+
+        BigDecimal beforeEntryAmount = entry.getEntryAmount();
+
+        Long applicationId = entry.getApplicationId();
+        balanceService.update(applicationId,
+                BalanceDTO.UpdateRequest.builder()
+                        .beforeEntryAmount(beforeEntryAmount)
+                        .afterEntryAmount(BigDecimal.ZERO)
+                        .build());
+
     }
 
     private boolean isContractedApplication(Long applicationId) {

@@ -5,16 +5,16 @@ import lombok.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
-public class EntryDTO implements Serializable {
-
+public class RepaymentDTO implements Serializable {
     @NoArgsConstructor
     @AllArgsConstructor
     @Builder
     @Getter
-    @Setter
     public static class Request {
-        private BigDecimal entryAmount;
+
+        private BigDecimal repaymentAmount;
 
     }
 
@@ -25,11 +25,13 @@ public class EntryDTO implements Serializable {
     @Setter
     public static class Response {
 
-        private Long entryId;
-
         private Long applicationId;
 
-        private BigDecimal entryAmount;
+        private Long repaymentId;
+
+        private BigDecimal repaymentAmount;
+
+        private BigDecimal balance;
 
         private LocalDateTime createdAt;
 
@@ -44,13 +46,17 @@ public class EntryDTO implements Serializable {
     @Setter
     public static class UpdateResponse {
 
-        private Long entryId;
-
         private Long applicationId;
 
-        private BigDecimal beforeEntryAmount;
+        private BigDecimal beforeRepaymentAmount;
 
-        private BigDecimal afterEntryAmount;
+        private BigDecimal afterRepaymentAmount;
+
+        private BigDecimal balance;
+
+        private LocalDateTime createdAt;
+
+        private LocalDateTime updatedAt;
 
     }
 

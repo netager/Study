@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/judgment")
+@RequestMapping("/judgments")
 public class JudgmentController extends AbstractController {
     private final JudgmentService judgmentService;
 
